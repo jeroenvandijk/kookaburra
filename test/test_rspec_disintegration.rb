@@ -92,6 +92,13 @@ describe "RSpec (dis)integration" do
     it's turtles all the way down' do # http://chalain.livejournal.com/66798.html
       assert @proxied_object.misguided_subcomponent.itself.itself.itself.filters_rspec_expectation_methods?
     end
+
+    it "lets you unproxy if you tell it you're a grownup" do
+      refute @proxied_object.without_rspec_masking.filters_rspec_expectation_methods?
+
+      refute_equal @proxied_object.object_id, @proxied_object.without_rspec_masking.object_id
+      assert_equal @bare_object   .object_id, @proxied_object.without_rspec_masking.object_id
+    end
   end
 
   describe Kookaburra::WorldSetup do
