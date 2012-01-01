@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), *%w[helper])
 describe "RSpec (dis)integration" do
   class MeddlingComponent
     def poke_nose_into_rspec_where_it_doesnt_belong
-      nil.should == nil
+      nil.should
       raise "if you got here, something is messed up, yo"
     end
 
@@ -13,7 +13,7 @@ describe "RSpec (dis)integration" do
 
     class MisguidedSubcomponent
       def give_testing_layer_responsibility_it_shouldnt_have
-        true.should == true
+        true.should
         raise "that totally should've exploded"
       end
 
@@ -90,14 +90,29 @@ describe "RSpec (dis)integration" do
     end
 
     it's turtles all the way down' do # http://chalain.livejournal.com/66798.html
-      assert @proxied_object.misguided_subcomponent.itself.itself.itself.filters_rspec_expectation_methods?
+      assert @proxied_object.misguided_subcomponent.itself.itself.itself.filters_rspec_expectation_methods?, "no turtles for you!"
     end
 
-    it "lets you unproxy if you tell it you're a grownup" do
-      refute @proxied_object.without_rspec_masking.filters_rspec_expectation_methods?
+    describe '#_verify_' do
+      it "gives you an actual object" do
+        refute_nil @proxied_object._verify_
+      end
 
-      refute_equal @proxied_object.object_id, @proxied_object.without_rspec_masking.object_id
-      assert_equal @bare_object   .object_id, @proxied_object.without_rspec_masking.object_id
+      it "gives you an object that doesn't #filters_rspec_expectation_methods?" do
+        refute @proxied_object._verify_.filters_rspec_expectation_methods?
+      end
+
+      it "gives you an object that actually doesn't filter RSpec expectation methods" do
+        assert_raises(UnwantedRSpecIntrusion) do
+          @proxied_object._verify_.poke_nose_into_rspec_where_it_doesnt_belong
+        end
+      end
+
+      it "gives you the same object if you ask for it more than once" do
+        thingy = @proxied_object._verify_
+        def thingy.wibble; :wobble; end
+        assert_equal :wobble, @proxied_object._verify_.wibble
+      end
     end
   end
 
@@ -108,7 +123,7 @@ describe "RSpec (dis)integration" do
       end
     end
 
-    it "doesn't raise Kookaburra::RSpecIntrusion even after calling (i.e., Kernel#should gets redefined when you're done)" do
+    it "doesn't raise Kookaburra::RSpecIntrusion even after calling the naughty method (i.e., Kernel#should gets redefined when you're done)" do
       begin
         @proxied_object.poke_nose_into_rspec_where_it_doesnt_belong
       rescue Kookaburra::RSpecIntrusion

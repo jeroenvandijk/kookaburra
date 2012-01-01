@@ -20,7 +20,8 @@ module Kookaburra
       __show_rspec_methods(Kernel, :should, :should_not)
     end
 
-    def without_rspec_masking
+    def _verify_
+      @proxied_object
     end
 
     def filters_rspec_expectation_methods?
