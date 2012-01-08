@@ -93,25 +93,25 @@ describe "RSpec (dis)integration" do
       assert @proxied_object.misguided_subcomponent.itself.itself.itself.filters_rspec_expectation_methods?, "no turtles for you!"
     end
 
-    describe '#_verify_' do
+    describe '#as_rspec' do
       it "gives you an actual object" do
-        refute_nil @proxied_object._verify_
+        refute_nil @proxied_object.as_rspec
       end
 
       it "gives you an object that doesn't #filters_rspec_expectation_methods?" do
-        refute @proxied_object._verify_.filters_rspec_expectation_methods?
+        refute @proxied_object.as_rspec.filters_rspec_expectation_methods?
       end
 
       it "gives you an object that actually doesn't filter RSpec expectation methods" do
         assert_raises(UnwantedRSpecIntrusion) do
-          @proxied_object._verify_.poke_nose_into_rspec_where_it_doesnt_belong
+          @proxied_object.as_rspec.poke_nose_into_rspec_where_it_doesnt_belong
         end
       end
 
       it "gives you the same object if you ask for it more than once" do
-        thingy = @proxied_object._verify_
+        thingy = @proxied_object.as_rspec
         def thingy.wibble; :wobble; end
-        assert_equal :wobble, @proxied_object._verify_.wibble
+        assert_equal :wobble, @proxied_object.as_rspec.wibble
       end
     end
   end

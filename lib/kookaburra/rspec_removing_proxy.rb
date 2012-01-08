@@ -20,7 +20,7 @@ module Kookaburra
       __show_rspec_methods(Kernel, :should, :should_not)
     end
 
-    def _verify_
+    def as_rspec
       @proxied_object
     end
 
