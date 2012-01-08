@@ -8,5 +8,9 @@ module Kookaburra
     def kookaburra_world_setup
       @drivers = Kookaburra.drivers
     end
+
+    def Verify(proxied)
+      proxied.as_rspec
+    end
   end
 end

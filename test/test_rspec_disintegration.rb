@@ -134,5 +134,15 @@ describe "RSpec (dis)integration" do
         @bare_object.poke_nose_into_rspec_where_it_doesnt_belong
       end
     end
+
+    describe '#Verify' do
+      it "returns an object that doesn't prohibit you from calling RSpec methods" do
+        world = Object.new
+        world.extend(Kookaburra::WorldSetup)
+        assert_raises(UnwantedRSpecIntrusion) do
+          world.Verify(@proxied_object).poke_nose_into_rspec_where_it_doesnt_belong
+        end
+      end
+    end
   end
 end
