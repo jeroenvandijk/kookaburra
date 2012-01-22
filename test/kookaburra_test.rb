@@ -160,6 +160,7 @@ describe Kookaburra do
     describe '#ui_driver' do
       it 'is a read/write attribute' do
         Kookaburra.ui_driver = :a_ui_driver
+        # TODO: add Kookaburra.reset_drivers! for use in test cleanup.  This state sticks around and affects other tests.
         assert_equal :a_ui_driver, Kookaburra.ui_driver
       end
 

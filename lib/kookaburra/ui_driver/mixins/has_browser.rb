@@ -19,10 +19,12 @@ module Kookaburra
       end
 
       def no_500_error!
-        if browser.has_css?('head title', :text => 'Internal Server Error')
-          sleep 30 if ENV['GIMME_CRAP']
+        if browser.status_code == 500 || browser.has_css?('head title', :text => 'Internal Server Error')
+          sleep 30 if ENV['INSPECTION_DELAY']
           raise Unexpected500, browser.body
         end
+      rescue Rack::Test::Error => e
+        raise e unless e.message == 'No response yet. Request a page first.'
       end
     end
   end
